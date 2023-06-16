@@ -7,43 +7,43 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract MyToken is ERC20 {
     mapping(uint256 => string) public tokenInscriptions;
     mapping(uint256 => string) public tokenURLs;
+    mapping(address => bool) private blacklist;
     uint256 public totalTokens;
 
-    mapping(address => bool) public blacklistedWallets;
-
-    constructor() ERC20("My Token", "MTK") {
+    constructor() ERC20("My Token", "RiDT") {
         totalTokens = 10;
+        uint256 decimalFactor = 10**decimals();
 
         for (uint256 i = 1; i <= totalTokens; i++) {
             string memory inscription = getTokenInscription(i);
             string memory url = getTokenURL(i);
             tokenInscriptions[i] = inscription;
             tokenURLs[i] = url;
-            _mint(msg.sender, 1);
+            _mint(msg.sender, decimalFactor); // Mint 1 token with 1 decimal place
         }
     }
 
     function getTokenInscription(uint256 tokenId) internal pure returns (string memory) {
         if (tokenId == 1) {
-            return "Token_1_RIDT";
+            return "Token_1_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/1.avif";
         } else if (tokenId == 2) {
-            return "Token_2_RIDT";
+            return "Token_2_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/2.avif";
         } else if (tokenId == 3) {
-            return "Token_3_RIDT";
+            return "Token_3_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/3.avif";
         } else if (tokenId == 4) {
-            return "Token_4_RIDT";
+            return "Token_4_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/4.avif";
         } else if (tokenId == 5) {
-            return "Token_5_RIDT";
+            return "Token_5_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/5.avif";
         } else if (tokenId == 6) {
-            return "Token_6_RIDT";
+            return "Token_6_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/6.avif";
         } else if (tokenId == 7) {
-            return "Token_7_RIDT";
+            return "Token_7_RIDT_https://www.youtube.com/watch?v=VhA1dZXeao0";
         } else if (tokenId == 8) {
-            return "Token_8_RIDT";
+            return "Token_8_RIDT_https://www.fca.org.uk/news/speeches/risks-token-regulation";
         } else if (tokenId == 9) {
-            return "Token_9_RIDT";
+            return "Token_9_RIDT_https://www.thetimes.co.uk/article/chancellor-alistair-darling-on-brink-of-second-bailout-for-banks-n9l382mn62h";
         } else if (tokenId == 10) {
-            return "Token_10_RIDT";
+            return "Token_10_RIDT_https://www.youtube.com/shorts/IachOr82OqE";
         } else {
             return "";
         }
@@ -75,40 +75,33 @@ contract MyToken is ERC20 {
         }
     }
 
-    function getTokenIdByHolder(address holder) public view returns (uint256) {
-        for (uint256 i = 1; i <= totalTokens; i++) {
-            if (balanceOf(holder) >= i) {
-                return i;
-            }
-        }
-        revert("Token not found for the holder");
+    function addToBlacklist(address account) external {
+        require(!blacklist[account], "Account is already blacklisted");
+        blacklist[account] = true;
     }
 
-    function updateInscription(uint256 tokenId, string memory newInscription) public {
-        require(tokenId <= totalTokens, "Invalid token ID");
-        tokenInscriptions[tokenId] = newInscription;
+    function removeFromBlacklist(address account) external {
+        require(blacklist[account], "Account is not blacklisted");
+        blacklist[account] = false;
     }
 
-    function updateURL(uint256 tokenId, string memory newURL) public {
-        require(tokenId <= totalTokens, "Invalid token ID");
-        tokenURLs[tokenId] = newURL;
+    // Additional functions
+
+    function getBalance() external view returns (uint256) {
+        return balanceOf(msg.sender);
     }
 
-    function blacklistWallet(address wallet) public {
-        blacklistedWallets[wallet] = true;
+    function transferTokens(address recipient, uint256 amount) external {
+        require(!blacklist[msg.sender], "Sender is blacklisted");
+        require(!blacklist[recipient], "Recipient is blacklisted");
+        _transfer(msg.sender, recipient, amount);
     }
 
-    function burnToken(uint256 tokenId) public {
-        require(tokenId <= totalTokens, "Invalid token ID");
-        require(balanceOf(msg.sender) >= tokenId, "Insufficient balance");
-
-        _burn(msg.sender, tokenId);
+    function getInscription(uint256 tokenId) external view returns (string memory) {
+        return tokenInscriptions[tokenId];
     }
 
-    function issueNewToken(string memory inscription, string memory url) public {
-        totalTokens++;
-        tokenInscriptions[totalTokens] = inscription;
-        tokenURLs[totalTokens] = url;
-        _mint(msg.sender, 1);
+    function getURL(uint256 tokenId) external view returns (string memory) {
+        return tokenURLs[tokenId];
     }
 }
