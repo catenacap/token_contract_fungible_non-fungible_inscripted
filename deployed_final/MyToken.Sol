@@ -1,0 +1,108 @@
+// SPDX-License-Identifier: MIT
+// 2013-2023 Catena Capital - Labs Division
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MyToken is ERC20 {
+    mapping(uint256 => string) public tokenInscriptions;
+    mapping(uint256 => string) public tokenURLs;
+    mapping(address => bool) private blacklist;
+    uint256 public totalTokens;
+
+    constructor() ERC20("My Token", "RiDT") {
+        totalTokens = 10;
+        uint256 decimalFactor = 10**decimals();
+
+        for (uint256 i = 1; i <= totalTokens; i++) {
+            string memory inscription = getTokenInscription(i);
+            string memory url = getTokenURL(i);
+            tokenInscriptions[i] = inscription;
+            tokenURLs[i] = url;
+            _mint(msg.sender, decimalFactor); // Mint 1 token with 1 decimal place
+        }
+    }
+
+    function getTokenInscription(uint256 tokenId) internal pure returns (string memory) {
+        if (tokenId == 1) {
+            return "Token_1_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/1.avif";
+        } else if (tokenId == 2) {
+            return "Token_2_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/2.avif";
+        } else if (tokenId == 3) {
+            return "Token_3_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/3.avif";
+        } else if (tokenId == 4) {
+            return "Token_4_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/4.avif";
+        } else if (tokenId == 5) {
+            return "Token_5_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/5.avif";
+        } else if (tokenId == 6) {
+            return "Token_6_RIDT_https://ai.catenacap.xyz/wp-content/uploads/inscription/6.avif";
+        } else if (tokenId == 7) {
+            return "Token_7_RIDT_https://www.youtube.com/watch?v=VhA1dZXeao0";
+        } else if (tokenId == 8) {
+            return "Token_8_RIDT_https://www.fca.org.uk/news/speeches/risks-token-regulation";
+        } else if (tokenId == 9) {
+            return "Token_9_RIDT_https://www.thetimes.co.uk/article/chancellor-alistair-darling-on-brink-of-second-bailout-for-banks-n9l382mn62h";
+        } else if (tokenId == 10) {
+            return "Token_10_RIDT_https://www.youtube.com/shorts/IachOr82OqE";
+        } else {
+            return "";
+        }
+    }
+
+    function getTokenURL(uint256 tokenId) internal pure returns (string memory) {
+        if (tokenId == 1) {
+            return "https://ai.catenacap.xyz/wp-content/uploads/inscription/1.avif";
+        } else if (tokenId == 2) {
+            return "https://ai.catenacap.xyz/wp-content/uploads/inscription/2.avif";
+        } else if (tokenId == 3) {
+            return "https://ai.catenacap.xyz/wp-content/uploads/inscription/3.avif";
+        } else if (tokenId == 4) {
+            return "https://ai.catenacap.xyz/wp-content/uploads/inscription/4.avif";
+        } else if (tokenId == 5) {
+            return "https://ai.catenacap.xyz/wp-content/uploads/inscription/5.avif";
+        } else if (tokenId == 6) {
+            return "https://ai.catenacap.xyz/wp-content/uploads/inscription/6.avif";
+        } else if (tokenId == 7) {
+            return "https://www.youtube.com/watch?v=VhA1dZXeao0";
+        } else if (tokenId == 8) {
+            return "https://www.fca.org.uk/news/speeches/risks-token-regulation";
+        } else if (tokenId == 9) {
+            return "https://www.thetimes.co.uk/article/chancellor-alistair-darling-on-brink-of-second-bailout-for-banks-n9l382mn62h";
+        } else if (tokenId == 10) {
+            return "https://www.youtube.com/shorts/IachOr82OqE";
+        } else {
+            return "";
+        }
+    }
+
+    function addToBlacklist(address account) external {
+        require(!blacklist[account], "Account is already blacklisted");
+        blacklist[account] = true;
+    }
+
+    function removeFromBlacklist(address account) external {
+        require(blacklist[account], "Account is not blacklisted");
+        blacklist[account] = false;
+    }
+
+    // Additional functions
+
+    function getBalance() external view returns (uint256) {
+        return balanceOf(msg.sender);
+    }
+
+    function transferTokens(address recipient, uint256 amount) external {
+        require(!blacklist[msg.sender], "Sender is blacklisted");
+        require(!blacklist[recipient], "Recipient is blacklisted");
+        _transfer(msg.sender, recipient, amount);
+    }
+
+    function getInscription(uint256 tokenId) external view returns (string memory) {
+        return tokenInscriptions[tokenId];
+    }
+
+    function getURL(uint256 tokenId) external view returns (string memory) {
+        return tokenURLs[tokenId];
+    }
+}
+
