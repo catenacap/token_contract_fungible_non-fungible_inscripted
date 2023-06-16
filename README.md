@@ -34,3 +34,9 @@ Note that you'll need to properly configure and manage the API requests, includi
 Keep in mind that Etherscan is a third-party service, and it may have limitations or restrictions on the data it provides. Therefore, it's important to review the Etherscan API documentation and any usage guidelines or restrictions they have in place.
 
 Alternatively, you can consider building a custom frontend that directly interacts with your deployed contract using web3.js or ethers.js libraries. This approach would allow you to retrieve the token inscriptions directly from the contract without relying on Etherscan.
+
+---
+
+Note we used MEW to interact with the contract.
+
+VIEW DATA FROM ON-CHAIN FOR TOKEN ID/INSCRIPTION : https://github.com/catenacap/token_contract_fungible_non-fungible_inscripted/tree/main
