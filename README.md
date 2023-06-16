@@ -23,11 +23,9 @@ Here are the general steps you can follow to display token inscriptions on alter
 
 2. Create a frontend application or website that uses the Etherscan API to fetch data from your contract. You can use dev frameworks like React, Angular, or Vue.js to build your frontend.
 
-3. Use the Etherscan API to query the `tokenInscriptions` mapping in your contract. You'll need to provide the contract address and the specific token ID to retrieve the inscription for that token, in our example(s) there are two versions, one is a standard inscribe, the other is inscribe+.avif-nft_links + inscribe+URL(s)
+3. Use the Etherscan API to query the `tokenInscriptions` mapping in your contract. You'll need to provide the contract address and the specific token ID to retrieve the inscription for that token, in our example(s) there are two versions, one is a standard inscribe, the other is inscribe+.avif-nft_links + inscribe+URL(s), the following is the finalised version (there was many versions on live/test nets with failures). 
 
-Version 1: https://etherscan.io/address/0xd7aaf146e1b835d102a8919063dc3c5269b06b5b [Early Iteration] 
-Version 2: https://etherscan.io/address/0x9f852fd39cea4a05c907e1e23e0dbde03399db32 Failed 
-Version 3: 
+Final version: https://etherscan.io/address/0x9fb8a19e1e903a13c321179cb884ddadd7288069
 
 4. Parse the API response and display the token inscription on your frontend UI.
 
